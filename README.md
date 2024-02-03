@@ -1,5 +1,4 @@
 # utl-python-very-simple-interactive-sqllite-dashboard-to-query-roger-deangelis-repositories
-Very simple interactive sqllite dashboard to query roger deangelis repositories
     %let pgm=utl-python-very-simple-interactive-sqllite-dashboard-to-query-roger-deangelis-repositories;
 
     Very simple interactive sqllite dashboard to query roger deangelis repositories
@@ -24,6 +23,10 @@ Very simple interactive sqllite dashboard to query roger deangelis repositories
              1 GUI dashboard
              2 Manual edit of python code
              3 Python dropdowns macros on end
+
+    If you want to download a list of my 02FEB2024 repos (not necessary)
+    http://tinyurl.com/2bay5xt5
+    https://raw.githubusercontent.com/rogerjdeangelis/utl-python-very-simple-interactive-sqllite-dashboard-to-query-roger-deangelis-repositories/main/rogerjdeangelisrepos20240201.txt
 
     /**************************************************************************************************************************/
     /*                                                                                                                        */
@@ -63,31 +66,34 @@ Very simple interactive sqllite dashboard to query roger deangelis repositories
     /*----  5. You only have to create and database and load table once      ----*/
     /*--                                                                     ----*/
 
-    %utl_submit_py64_310('
-    import os;
-    import sqlite3;
-    import pandas as pd;
-    repos = pd.read_csv("http://tinyurl.com/4csvt7x6",header=0);
-    repos.info();
-    os.remove("c:/temp/xport.db");
-    database = "c:/temp/xport.db";
-    mydb = sqlite3.connect(database);
-    cur = mydb.cursor();
-    cur.execute("drop table if exists repos");
-    repos.to_sql(name="repos", con=mydb);
-    repos=pd.read_sql_query("""select * from repos""",mydb);
-    print("repos",repos);
-    cur.execute("select * from sqlite_master");
-    print("meta",cur.fetchall());
-    mydb.close();
-    ');
+    %utl_pybegin;
+    parmcards4;
+    import os
+    import sqlite3
+    import pandas as pd
+    repos = pd.read_csv("http://tinyurl.com/2bay5xt5",header=0)
+    repos.info()
+    os.remove("c:/temp/xport.db")
+    database = "c:/temp/xport.db"
+    mydb = sqlite3.connect(database)
+    cur = mydb.cursor()
+    cur.execute("drop table if exists repos")
+    repos.to_sql(name="repos", con=mydb)
+    repos=pd.read_sql_query("""select * from repos""",mydb)
+    print("repos",repos)
+    cur.execute("select * from sqlite_master")
+    print("meta",cur.fetchall())
+    mydb.close()
+    ;;;;
+    run;quit;
+    %utl_pyend;
 
     /**************************************************************************************************************************/
     /*                                                                                                                        */
     /*  PANDA DATAFRAME                                                                                                       */
     /*                                                                                                                        */
     /*  <class 'pandas.core.frame.DataFrame'>                                                                                 */
-    /*  RangeIndex: 2,125 entries, 0 to 2,125                                                                                 */
+    /*  RangeIndex: 2,121 entries, 0 to 2,121                                                                                 */
     /*  Data columns (total 1 columns):                                                                                       */
     /*   #   Column  Non-Null Count  Dtype                                                                                    */
     /*  ---  ------  --------------  -----                                                                                    */
@@ -152,7 +158,6 @@ Very simple interactive sqllite dashboard to query roger deangelis repositories
     database = "c:/temp/xport.db"
     mydb = sqlite3.connect(database)
     cur = mydb.cursor()
-    strq=inputValue;
     sql="""select repos from repos where instr(repos,?) > 0 """
     df=pd.read_sql_query(sql,mydb,params=[inputValue])
     print(tabulate(df, showindex=False, headers=df.columns))
@@ -287,3 +292,4 @@ Very simple interactive sqllite dashboard to query roger deangelis repositories
      \___|_| |_|\__,_|
 
     */
+
